@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
 	<name>nginx-config</name>
-	<comment></comment>
+	<comment>Nginx, PHP-FPM, Varnish 4 stack configuration files on CentOS</comment>
 	<projects>
 	</projects>
 	<buildSpec>
