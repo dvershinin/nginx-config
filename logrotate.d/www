@@ -1,7 +1,9 @@
-/var/www/vhosts/*/logs/*.log {
+/var/www/vhosts/*/logs/access.log
+/var/www/vhosts/*/logs/error.log {
+        su root root
         daily
-        missingok
-        rotate 52
+	missingok
+        rotate 7
         compress
         delaycompress
         notifempty
@@ -10,4 +12,17 @@
         postrotate
                 [ ! -f /var/run/nginx.pid ] || kill -USR1 `cat /var/run/nginx.pid`
         endscript
+}
+/var/www/vhosts/*/logs/php.log
+/var/www/vhosts/*/logs/slow.log {
+    su root root
+    missingok
+    rotate 7
+    daily
+    notifempty
+    sharedscripts
+    delaycompress
+    postrotate
+	/bin/kill -SIGUSR1 `cat /run/php-fpm/php-fpm.pid 2>/dev/null` 2>/dev/null || true
+    endscript
 }
