@@ -1,0 +1,83 @@
+#!/bin/bash
+#
+# chkconfig: - 85 15
+# description: tracd
+# processname: tracd
+# pidfile: /var/run/tracd.pid
+
+# Source function library.
+. /etc/rc.d/init.d/functions
+
+## Options you should probably change ##
+# If you only want to serve one project keep this variable
+# empty and set the PROJECT_ENV variable
+ENV_PARENT_DIR=/var/trac
+PROJECT_ENV=
+PORT=3050
+# add any additional options (such as authentication) here. If you only have one
+# project you should probably add -s here
+ADDITIONAL_OPTS="--basic-auth *,/myproject/trac/htpasswd,/myproject/trac /myproject/trac"
+ADDITIONAL_OPTS=""
+DAEMON=/usr/bin/tracd
+NAME=tracd
+DESC="web server"
+PIDFILE=/var/run/$NAME.pid
+SCRIPTNAME=/etc/init.d/$NAME
+
+test -x $DAEMON || exit 1
+
+set -e
+
+DAEMON_OPTS="--daemonize --pidfile=$PIDFILE --port=$PORT $ADDITIONAL_OPTS"
+if [ -n "$ENV_PARENT_DIR" ]; then
+        DAEMON_OPTS="$DAEMON_OPTS --env-parent-dir=$ENV_PARENT_DIR"
+else
+        DAEMON_OPTS="$DAEMON_OPTS $PROJECT_ENV"
+fi
+
+LOCKFILE=${LOCKFILE-/var/lock/subsys/tracd}
+RETVAL=0
+
+
+start() {
+        if [ -a $LOCKFILE ];
+        then
+                echo "tracd appears to be running, or has crashed, or was not stopped properly."
+                echo "check $PIDFILE, and remove $LOCKFILE to start again."
+                return -1;
+        fi
+
+        echo -n $"Starting $NAME: "
+        LANG=$TRACD_LANG $DAEMON $DAEMON_OPTS
+        RETVAL=$?
+        echo
+        [ $RETVAL = 0 ] && touch ${LOCKFILE}
+        return $RETVAL
+}
+stop() {
+        if [ -a $PIDFILE ]
+        then
+                echo -n $"Stopping $NAME: "
+                kill -9 `cat ${PIDFILE}`
+                RETVAL=$?
+                echo
+                [ $RETVAL = 0 ] && rm -f ${LOCKFILE} ${PIDFILE}
+        else
+                echo "tracd appears not to be running."
+        fi
+}
+
+# See how we were called.
+case "$1" in
+  start)
+        start
+        ;;
+  stop)
+        stop
+        ;;
+  *)
+        echo $"Usage: $NAME {start|stop}"
+        exit 1
+esac
+
+exit $RETVAL
