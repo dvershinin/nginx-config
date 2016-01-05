@@ -82,6 +82,8 @@ sub vcl_recv {
 
 	# Remove any Google Analytics based cookies
 	set req.http.Cookie = regsuball(req.http.Cookie, "__utm.=[^;]+(; )?", "");
+	set req.http.Cookie = regsuball(req.http.Cookie, "_ga=[^;]+(; )?", "");
+	set req.http.Cookie = regsuball(req.http.Cookie, "_gat=[^;]+(; )?", "");
 
 	# Remove the Quant Capital cookies (added by some plugin, all __qca)
 	set req.http.Cookie = regsuball(req.http.Cookie, "__qc.=[^;]+(; )?", "");
@@ -177,9 +179,9 @@ sub vcl_backend_response {
 	}
 
 	# Only allow cookies to be set if we're in admin area
-	if (beresp.http.Set-Cookie && bereq.url !~ "^/wp-(login|admin)") {
-        	unset beresp.http.Set-Cookie;
-    	}
+	#if (beresp.http.Set-Cookie && bereq.url !~ "^/wp-(login|admin)") {
+    #    	unset beresp.http.Set-Cookie;
+    #	}
 
 	# don't cache response to posted requests or those with basic auth
 	if ( bereq.method == "POST" || bereq.http.Authorization ) {
