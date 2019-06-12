@@ -1,2 +1,3 @@
 # nginx-config
-Nginx configuration files
+
+Nginx configuration files (old, do not use - yet)
