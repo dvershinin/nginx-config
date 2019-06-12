@@ -6,4 +6,4 @@
 # Nginx configuration files
 # https://github.com/github/linguist/blob/master/README.md
 
-nginx/** text eol=lf linguist-language=Nginx
+nginx/** text eol=lf linguist-language=Nginx linguist-detectable=true
