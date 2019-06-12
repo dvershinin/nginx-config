@@ -6,10 +6,4 @@
 # Nginx configuration files
 # https://github.com/github/linguist/blob/master/README.md
 
-**/nginx/**/*.conf		text    eol=lf    linguist-language=Nginx
-**/nginx/**/*.conf.off	text	eol=lf    linguist-language=Nginx
-**/nginx/**/*_params	text    eol=lf    linguist-language=Nginx
-*.conf.nginx			text    eol=lf    linguist-language=Nginx
-#**/nginx/{sites-available,sites-templates,conf.d,global}/*.conf text eol=lf linguist-language=Nginx
-
-#*.conf		text	eol=lf
+nginx/** text eol=lf linguist-language=Nginx
